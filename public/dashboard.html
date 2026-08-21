@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Panel · GanaAds</title>
+<link rel="stylesheet" href="css/style.css">
+<!-- Google AdSense se inserta dinámicamente desde js/dashboard.js usando /api/config -->
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="brand-mark"></div>
+    <div class="brand-name">GanaAds</div>
+  </div>
+
+  <div class="balance-panel">
+    <div class="balance-eyebrow">Tu saldo</div>
+    <div class="balance-amount" id="balance-usdt">$0.00</div>
+    <div class="balance-points" id="balance-points">0 puntos</div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="num" id="stat-referrals">0</div>
+      <div class="label">Referidos</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" id="stat-views">0</div>
+      <div class="label">Anuncios vistos</div>
+    </div>
+  </div>
+
+  <!-- SECCIÓN: VER ANUNCIOS -->
+  <section id="section-watch">
+    <div class="card">
+      <h2>Ver anuncio y ganar</h2>
+      <p id="watch-copy">Presiona el botón y espera a que termine el anuncio para recibir tus puntos.</p>
+      <div class="ad-slot" id="ad-slot">El anuncio aparecerá aquí</div>
+      <button class="btn btn-gold" id="watch-btn">Ver anuncio</button>
+      <div class="error-msg" id="watch-error"></div>
+      <div class="success-msg" id="watch-success"></div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: REFERIDOS -->
+  <section id="section-referrals" style="display:none">
+    <div class="card">
+      <h2>Invita y gana</h2>
+      <p>Comparte tu enlace. Cuando tu invitado vea su primer anuncio, ganas un bono único de puntos.</p>
+      <div class="referral-box">
+        <input type="text" id="ref-link" readonly>
+        <button class="btn btn-ghost" id="copy-ref-btn" style="width:auto; margin:0; padding:12px 16px;">Copiar</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Tus referidos</h2>
+      <div id="referrals-list"><p class="muted">Aún no tienes referidos.</p></div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN: RETIROS -->
+  <section id="section-withdraw" style="display:none">
+    <div class="card">
+      <h2>Retirar saldo</h2>
+      <p id="withdraw-copy">Retiro mínimo: $5.00 USDT.</p>
+      <label for="wallet-address">Tu dirección de billetera USDT</label>
+      <input type="text" id="wallet-address" placeholder="Ej: TXxxxxxxxxxxxxxxxxxxxxxxxxxx">
+      <button class="btn btn-primary" id="withdraw-btn">Solicitar retiro</button>
+      <div class="error-msg" id="withdraw-error"></div>
+      <div class="success-msg" id="withdraw-success"></div>
+    </div>
+    <div class="card">
+      <h2>Historial de retiros</h2>
+      <div id="withdrawals-list"><p class="muted">Aún no has solicitado retiros.</p></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav-tabs">
+  <div class="nav-tab active" data-section="watch">Ver anuncios</div>
+  <div class="nav-tab" data-section="referrals">Referidos</div>
+  <div class="nav-tab" data-section="withdraw">Retirar</div>
+  <div class="nav-tab" id="logout-tab">Salir</div>
+</div>
+
+<script src="js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · Retiros pendientes</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div class="brand-mark"></div>
+    <div class="brand-name">GanaAds Admin</div>
+  </div>
+
+  <h1>Retiros pendientes</h1>
+  <p>Aprueba solo después de haber enviado el USDT manualmente a la billetera del usuario.</p>
+
+  <div id="pending-list"></div>
+</div>
+
+<script>
+const token = localStorage.getItem('token');
+if (!token) window.location.href = 'index.html';
+const authHeaders = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+
+async function load() {
+  const res = await fetch('/api/withdrawals/pending', { headers: authHeaders });
+  if (res.status === 403) {
+    document.getElementById('pending-list').innerHTML =
+      '<p class="error-msg show">No tienes permisos de administrador en esta cuenta.</p>';
+    return;
+  }
+  const list = await res.json();
+  const container = document.getElementById('pending-list');
+  if (list.length === 0) {
+    container.innerHTML = '<p class="muted">No hay retiros pendientes.</p>';
+    return;
+  }
+  container.innerHTML = list.map(w => `
+    <div class="card">
+      <strong>${w.email}</strong>
+      <p style="margin:6px 0">Monto: $${w.amount_usdt} USDT</p>
+      <p style="margin:6px 0; word-break:break-all">Billetera: ${w.wallet_address}</p>
+      <button class="btn btn-primary" onclick="approve(${w.id})">Marcar como pagado</button>
+      <button class="btn btn-ghost" onclick="reject(${w.id})">Rechazar</button>
+    </div>
+  `).join('');
+}
+
+async function approve(id) {
+  await fetch(`/api/withdrawals/${id}/approve`, { method: 'POST', headers: authHeaders });
+  load();
+}
+async function reject(id) {
+  await fetch(`/api/withdrawals/${id}/reject`, { method: 'POST', headers: authHeaders });
+  load();
+}
+
+load();
+</script>
+</body>
+</html>

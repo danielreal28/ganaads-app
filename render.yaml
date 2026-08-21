@@ -1,0 +1,29 @@
+databases:
+  - name: ganaads-db
+    plan: free
+
+services:
+  - type: web
+    name: ganaads-web
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ganaads-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: POINTS_PER_AD
+        value: 10
+      - key: POINTS_REFERRAL_BONUS
+        value: 500
+      - key: POINTS_PER_USDT
+        value: 1000
+      - key: MIN_WITHDRAWAL_USDT
+        value: 5
+      - key: ADSENSE_PUBLISHER_ID
+        value: ca-pub-0000000000000000
