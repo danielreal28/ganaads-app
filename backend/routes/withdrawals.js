@@ -142,4 +142,19 @@ router.post('/:id/reject', requireAuth, requireAdmin, async (req, res) => {
   }
 });
 
+// DELETE /api/withdrawals/history - el usuario borra su propio historial
+// (solo elimina retiros ya procesados: pagados o rechazados; nunca uno pendiente)
+router.delete('/history', requireAuth, async (req, res) => {
+  try {
+    const result = await pool.query(
+      `DELETE FROM withdrawals WHERE user_id = $1 AND status != 'pending'`,
+      [req.userId]
+    );
+    res.json({ ok: true, deletedCount: result.rowCount });
+  } catch (err) {
+    console.error('Error en /withdrawals/history DELETE:', err);
+    res.status(500).json({ error: 'No se pudo borrar el historial.' });
+  }
+});
+
 module.exports = router;

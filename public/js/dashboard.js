@@ -223,6 +223,11 @@ async function loadWithdrawals() {
   const res = await fetch('/api/withdrawals/mine', { headers: authHeaders });
   const list = await res.json();
   const container = document.getElementById('withdrawals-list');
+  const clearBtn = document.getElementById('clear-history-btn');
+
+  const hasProcessed = list.some((w) => w.status !== 'pending');
+  clearBtn.style.display = hasProcessed ? 'inline-flex' : 'none';
+
   if (list.length === 0) {
     container.innerHTML = '<p class="muted">Aún no has solicitado retiros.</p>';
     return;
@@ -238,6 +243,13 @@ async function loadWithdrawals() {
     `)
     .join('');
 }
+
+document.getElementById('clear-history-btn').addEventListener('click', async () => {
+  const confirmClear = confirm('¿Borrar el historial de retiros ya pagados o rechazados? Esto no se puede deshacer. Los retiros pendientes NO se borran.');
+  if (!confirmClear) return;
+  await fetch('/api/withdrawals/history', { method: 'DELETE', headers: authHeaders });
+  await loadWithdrawals();
+});
 
 // ---------- Inicio ----------
 (async function init() {
