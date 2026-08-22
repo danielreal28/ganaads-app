@@ -40,7 +40,7 @@ router.get('/me', requireAuth, async (req, res) => {
 
     res.json({
       ...user,
-      balance_usdt: (user.balance_points / POINTS_PER_USDT).toFixed(2),
+      balance_usdt: (user.balance_points / POINTS_PER_USDT).toFixed(4),
       referrals: referralsResult.rows,
       referral_count: referralsResult.rows.length,
       adViewsSinceWithdrawal,
