@@ -78,6 +78,14 @@ async function loadUser() {
   document.getElementById('stat-referrals').textContent = user.referral_count;
   window.currentUser = user;
 
+  if (user.is_admin) {
+    const adminTab = document.getElementById('admin-tab');
+    adminTab.style.display = 'block';
+    adminTab.addEventListener('click', () => {
+      window.location.href = 'admin.html';
+    });
+  }
+
   const refLink = `${window.location.origin}/auth.html?ref=${user.referral_code}`;
   document.getElementById('ref-link').value = refLink;
 }
