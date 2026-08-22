@@ -43,7 +43,7 @@ router.post('/request', requireAuth, async (req, res) => {
       `INSERT INTO withdrawals (user_id, points_spent, amount_usdt, wallet_address, status)
        VALUES ($1, $2, $3, $4, 'pending')
        RETURNING id, amount_usdt, status, requested_at`,
-      [req.userId, balancePoints, balanceUsdt.toFixed(2), walletAddress.trim()]
+      [req.userId, balancePoints, balanceUsdt.toFixed(4), walletAddress.trim()]
     );
 
     await client.query('COMMIT');

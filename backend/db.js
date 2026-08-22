@@ -57,6 +57,10 @@ async function initDb() {
     );
   `);
 
+  // Amplía la precisión de los montos de retiro a 4 decimales
+  // (antes solo guardaba 2, causando diferencias de redondeo).
+  await pool.query(`ALTER TABLE withdrawals ALTER COLUMN amount_usdt TYPE NUMERIC(10,4);`);
+
   console.log('Base de datos lista (tablas verificadas/creadas).');
 }
 
