@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin · Retiros pendientes</title>
+<title>Admin · GanaAds</title>
 <link rel="stylesheet" href="css/style.css">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5598441517366617" crossorigin="anonymous"></script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5598441517366617" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -16,8 +15,23 @@
   </div>
 
   <div class="cta-row" style="margin-bottom:20px">
-    <a href="dashboard.html" class="btn btn-ghost" style="text-decoration:none; margin-top:0">Volver al panel</a>
-    <button class="btn btn-ghost" id="admin-logout-btn" style="margin-top:0">Salir</button>
+    <a href="dashboard.html" class="btn btn-ghost btn-lg" style="text-decoration:none; margin-top:0">Volver al panel</a>
+    <button class="btn btn-ghost btn-lg" id="admin-logout-btn" style="margin-top:0">Salir</button>
+  </div>
+
+  <div class="admin-stats">
+    <div class="stat-box">
+      <div class="num" id="stat-total-users">—</div>
+      <div class="label">Usuarios registrados</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" id="stat-pending">—</div>
+      <div class="label">Retiros pendientes</div>
+    </div>
+    <div class="stat-box">
+      <div class="num" id="stat-paid">—</div>
+      <div class="label">Total pagado (USDT)</div>
+    </div>
   </div>
 
   <h1>Retiros pendientes</h1>
@@ -35,6 +49,15 @@ document.getElementById('admin-logout-btn').addEventListener('click', () => {
   localStorage.removeItem('token');
   window.location.href = 'auth.html';
 });
+
+async function loadStats() {
+  const res = await fetch('/api/admin/stats', { headers: authHeaders });
+  if (!res.ok) return;
+  const stats = await res.json();
+  document.getElementById('stat-total-users').textContent = stats.totalUsers;
+  document.getElementById('stat-pending').textContent = stats.pendingWithdrawals;
+  document.getElementById('stat-paid').textContent = `$${stats.totalPaidUsdt}`;
+}
 
 async function load() {
   const res = await fetch('/api/withdrawals/pending', { headers: authHeaders });
@@ -54,8 +77,8 @@ async function load() {
       <strong>${w.email}</strong>
       <p style="margin:6px 0">Monto: $${w.amount_usdt} USDT</p>
       <p style="margin:6px 0; word-break:break-all">Billetera: ${w.wallet_address}</p>
-      <button class="btn btn-primary" onclick="approve(${w.id})">Marcar como pagado</button>
-      <button class="btn btn-ghost" onclick="reject(${w.id})">Rechazar</button>
+      <button class="btn btn-primary btn-lg" onclick="approve(${w.id})">Marcar como pagado</button>
+      <button class="btn btn-ghost btn-lg" onclick="reject(${w.id})">Rechazar</button>
     </div>
   `).join('');
 }
@@ -63,13 +86,16 @@ async function load() {
 async function approve(id) {
   await fetch(`/api/withdrawals/${id}/approve`, { method: 'POST', headers: authHeaders });
   load();
+  loadStats();
 }
 async function reject(id) {
   await fetch(`/api/withdrawals/${id}/reject`, { method: 'POST', headers: authHeaders });
   load();
+  loadStats();
 }
 
 load();
+loadStats();
 </script>
 </body>
 </html>

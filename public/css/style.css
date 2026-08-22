@@ -226,9 +226,10 @@ input:focus {
 .nav-tab {
   flex: 1;
   text-align: center;
-  padding: 12px 0 14px;
+  padding: 16px 0 18px;
   color: var(--text-dim);
-  font-size: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   border-top: 2px solid transparent;
 }
@@ -387,3 +388,15 @@ input:focus {
   padding-top: 20px;
   border-top: 1px solid var(--border);
 }
+
+.btn-lg {
+  padding: 16px 22px;
+  font-size: 1.02rem;
+}
+
+.admin-stats {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.admin-stats .stat-box .num { color: var(--gold); }
