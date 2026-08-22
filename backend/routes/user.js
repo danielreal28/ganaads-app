@@ -23,11 +23,27 @@ router.get('/me', requireAuth, async (req, res) => {
       [req.userId]
     );
 
+    // Cuenta los anuncios vistos SOLO desde el último retiro solicitado
+    // (el contador se reinicia en 0 cada vez que el usuario pide un retiro).
+    const lastWithdrawalResult = await pool.query(
+      `SELECT COALESCE(MAX(requested_at), '1970-01-01') AS last_withdrawal_at
+       FROM withdrawals WHERE user_id = $1`,
+      [req.userId]
+    );
+    const lastWithdrawalAt = lastWithdrawalResult.rows[0].last_withdrawal_at;
+
+    const viewsSinceResult = await pool.query(
+      `SELECT COUNT(*) FROM ad_views WHERE user_id = $1 AND viewed_at > $2`,
+      [req.userId, lastWithdrawalAt]
+    );
+    const adViewsSinceWithdrawal = parseInt(viewsSinceResult.rows[0].count, 10);
+
     res.json({
       ...user,
       balance_usdt: (user.balance_points / POINTS_PER_USDT).toFixed(2),
       referrals: referralsResult.rows,
       referral_count: referralsResult.rows.length,
+      adViewsSinceWithdrawal,
     });
   } catch (err) {
     console.error('Error en /user/me:', err);

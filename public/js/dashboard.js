@@ -54,6 +54,7 @@ async function loadUser() {
   document.getElementById('balance-usdt').textContent = `$${user.balance_usdt}`;
   document.getElementById('balance-points').textContent = `${user.balance_points} puntos`;
   document.getElementById('stat-referrals').textContent = user.referral_count;
+  document.getElementById('stat-views').textContent = user.adViewsSinceWithdrawal;
   window.currentUser = user;
 
   if (user.is_admin) {
@@ -71,7 +72,6 @@ async function loadUser() {
 async function loadAdHistory() {
   const res = await fetch('/api/ads/history', { headers: authHeaders });
   const history = await res.json();
-  document.getElementById('stat-views').textContent = history.length;
 }
 
 // ---------- Ver anuncio y ganar puntos ----------
