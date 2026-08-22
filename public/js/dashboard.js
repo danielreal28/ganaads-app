@@ -1,5 +1,5 @@
 const token = localStorage.getItem('token');
-if (!token) window.location.href = 'index.html';
+if (!token) window.location.href = 'auth.html';
 
 const authHeaders = {
   'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ tabs.forEach((tab) => {
 
 document.getElementById('logout-tab').addEventListener('click', () => {
   localStorage.removeItem('token');
-  window.location.href = 'index.html';
+  window.location.href = 'auth.html';
 });
 
 // ---------- Carga de configuración pública + datos del usuario ----------
@@ -69,7 +69,7 @@ async function loadUser() {
   const res = await fetch('/api/user/me', { headers: authHeaders });
   if (res.status === 401) {
     localStorage.removeItem('token');
-    window.location.href = 'index.html';
+    window.location.href = 'auth.html';
     return;
   }
   const user = await res.json();
@@ -78,7 +78,7 @@ async function loadUser() {
   document.getElementById('stat-referrals').textContent = user.referral_count;
   window.currentUser = user;
 
-  const refLink = `${window.location.origin}/index.html?ref=${user.referral_code}`;
+  const refLink = `${window.location.origin}/auth.html?ref=${user.referral_code}`;
   document.getElementById('ref-link').value = refLink;
 }
 

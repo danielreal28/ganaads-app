@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gana Viendo Anuncios</title>
+<link rel="stylesheet" href="css/style.css">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5598441517366617" crossorigin="anonymous"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5598441517366617" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="brand">
+    <div class="brand-mark"></div>
+    <div class="brand-name">GanaAds</div>
+  </div>
+
+  <h1 id="form-title">Crea tu cuenta</h1>
+  <p>Regístrate, mira anuncios y gana puntos. Invita amigos y gana un bono extra cuando empiecen a ver anuncios también.</p>
+
+  <div class="card">
+    <form id="auth-form">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" required placeholder="tucorreo@ejemplo.com">
+
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" required placeholder="Mínimo 6 caracteres" minlength="6">
+
+      <div id="ref-field" style="display:none">
+        <label for="refcode">Código de referido</label>
+        <input type="text" id="refcode" placeholder="Opcional">
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submit-btn">Crear cuenta</button>
+      <div class="error-msg" id="error-box"></div>
+    </form>
+
+    <div class="switch-link">
+      <span id="switch-text">¿Ya tienes cuenta?</span>
+      <a href="#" id="switch-link">Inicia sesión</a>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/auth.js"></script>
+</body>
+</html>

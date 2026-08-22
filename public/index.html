@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gana Viendo Anuncios</title>
+<title>GanaAds — Gana puntos viendo anuncios</title>
+<meta name="description" content="GanaAds es una plataforma donde los usuarios ven anuncios cortos a cambio de puntos canjeables, e invitan amigos para ganar un bono adicional.">
 <link rel="stylesheet" href="css/style.css">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5598441517366617" crossorigin="anonymous"></script>
 </head>
@@ -15,34 +16,40 @@
     <div class="brand-name">GanaAds</div>
   </div>
 
-  <h1 id="form-title">Crea tu cuenta</h1>
-  <p>Regístrate, mira anuncios y gana puntos. Invita amigos y gana un bono extra cuando empiecen a ver anuncios también.</p>
+  <h1>Gana puntos viendo anuncios cortos</h1>
+  <p>
+    GanaAds es una plataforma web donde puedes ver anuncios cortos a cambio de
+    puntos, que luego puedes convertir en saldo. Invita a tus amigos y gana un
+    bono adicional cuando ellos empiecen a participar también.
+  </p>
 
   <div class="card">
-    <form id="auth-form">
-      <label for="email">Correo electrónico</label>
-      <input type="email" id="email" required placeholder="tucorreo@ejemplo.com">
-
-      <label for="password">Contraseña</label>
-      <input type="password" id="password" required placeholder="Mínimo 6 caracteres" minlength="6">
-
-      <div id="ref-field" style="display:none">
-        <label for="refcode">Código de referido</label>
-        <input type="text" id="refcode" placeholder="Opcional">
-      </div>
-
-      <button type="submit" class="btn btn-primary" id="submit-btn">Crear cuenta</button>
-      <div class="error-msg" id="error-box"></div>
-    </form>
-
-    <div class="switch-link">
-      <span id="switch-text">¿Ya tienes cuenta?</span>
-      <a href="#" id="switch-link">Inicia sesión</a>
-    </div>
+    <h2>¿Cómo funciona?</h2>
+    <p style="margin-bottom:10px">
+      <strong>1. Regístrate</strong> con tu correo electrónico en segundos.
+    </p>
+    <p style="margin-bottom:10px">
+      <strong>2. Mira anuncios</strong> cortos desde tu panel y acumula puntos
+      por cada uno que completes.
+    </p>
+    <p style="margin-bottom:10px">
+      <strong>3. Invita amigos</strong> con tu enlace personal y recibe un
+      bono cuando ellos vean su primer anuncio.
+    </p>
+    <p style="margin-bottom:0">
+      <strong>4. Retira tu saldo</strong> una vez alcances el mínimo
+      establecido en la plataforma.
+    </p>
   </div>
 
-</div>
+  <a href="auth.html" class="btn btn-primary" style="text-decoration:none">Crear cuenta gratis</a>
+  <a href="auth.html" class="btn btn-ghost" style="text-decoration:none">Ya tengo cuenta</a>
 
-<script src="js/auth.js"></script>
+  <p style="margin-top:32px; font-size:0.8rem; text-align:center;">
+    <a href="privacy.html">Política de Privacidad</a> ·
+    <a href="terms.html">Términos de Servicio</a>
+  </p>
+
+</div>
 </body>
 </html>
