@@ -206,7 +206,7 @@ withdrawBtn.addEventListener('click', async () => {
       withdrawError.textContent = data.error || 'No se pudo procesar la solicitud.';
       withdrawError.classList.add('show');
     } else {
-      withdrawSuccess.textContent = `Solicitud enviada por $${data.amount_usdt} USDT. Te pagaremos pronto.`;
+      withdrawSuccess.textContent = `Tu solicitud de $${data.amount_usdt} USDT está en revisión. Será pagada en un plazo de 6 a 12 horas.`;
       withdrawSuccess.classList.add('show');
       document.getElementById('wallet-address').value = '';
       await loadUser();
