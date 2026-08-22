@@ -15,6 +15,11 @@
     <div class="brand-name">GanaAds Admin</div>
   </div>
 
+  <div class="cta-row" style="margin-bottom:20px">
+    <a href="dashboard.html" class="btn btn-ghost" style="text-decoration:none; margin-top:0">Volver al panel</a>
+    <button class="btn btn-ghost" id="admin-logout-btn" style="margin-top:0">Salir</button>
+  </div>
+
   <h1>Retiros pendientes</h1>
   <p>Aprueba solo después de haber enviado el USDT manualmente a la billetera del usuario.</p>
 
@@ -25,6 +30,11 @@
 const token = localStorage.getItem('token');
 if (!token) window.location.href = 'auth.html';
 const authHeaders = { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
+
+document.getElementById('admin-logout-btn').addEventListener('click', () => {
+  localStorage.removeItem('token');
+  window.location.href = 'auth.html';
+});
 
 async function load() {
   const res = await fetch('/api/withdrawals/pending', { headers: authHeaders });
