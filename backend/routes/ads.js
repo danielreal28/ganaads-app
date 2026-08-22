@@ -6,6 +6,8 @@ const router = express.Router();
 
 const POINTS_PER_AD = parseInt(process.env.POINTS_PER_AD || '10', 10);
 const POINTS_REFERRAL_BONUS = parseInt(process.env.POINTS_REFERRAL_BONUS || '500', 10);
+const MAX_ADS_PER_DAY = parseInt(process.env.MAX_ADS_PER_DAY || '50', 10);
+const MIN_SECONDS_BETWEEN_ADS = parseInt(process.env.MIN_SECONDS_BETWEEN_ADS || '20', 10);
 
 // POST /api/ads/view
 // Se llama DESPUÉS de que el anuncio terminó de reproducirse completo en el frontend.
@@ -13,6 +15,39 @@ router.post('/view', requireAuth, async (req, res) => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
+
+    // --- Protección contra fraude / abuso ---
+
+    // 1. No permitir ver anuncios demasiado seguido (evita scripts automatizados)
+    const lastViewResult = await client.query(
+      `SELECT viewed_at FROM ad_views WHERE user_id = $1
+       ORDER BY viewed_at DESC LIMIT 1`,
+      [req.userId]
+    );
+    if (lastViewResult.rows.length > 0) {
+      const secondsSinceLast =
+        (Date.now() - new Date(lastViewResult.rows[0].viewed_at).getTime()) / 1000;
+      if (secondsSinceLast < MIN_SECONDS_BETWEEN_ADS) {
+        await client.query('ROLLBACK');
+        return res.status(429).json({
+          error: `Espera ${Math.ceil(MIN_SECONDS_BETWEEN_ADS - secondsSinceLast)} segundos antes de ver otro anuncio.`,
+        });
+      }
+    }
+
+    // 2. Límite diario de anuncios por usuario (evita vaciar la cuenta de AdSense)
+    const todayCountResult = await client.query(
+      `SELECT COUNT(*) FROM ad_views
+       WHERE user_id = $1 AND viewed_at >= CURRENT_DATE`,
+      [req.userId]
+    );
+    const todayCount = parseInt(todayCountResult.rows[0].count, 10);
+    if (todayCount >= MAX_ADS_PER_DAY) {
+      await client.query('ROLLBACK');
+      return res.status(429).json({
+        error: `Alcanzaste el límite de ${MAX_ADS_PER_DAY} anuncios por día. Vuelve mañana.`,
+      });
+    }
 
     // 1. Suma los puntos por ver el anuncio
     await client.query(
