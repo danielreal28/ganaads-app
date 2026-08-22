@@ -288,3 +288,102 @@ input:focus {
   margin-right: 8px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal { opacity: 0; }
+.reveal.in { animation: fadeUp 0.6s ease forwards; }
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(46, 217, 168, 0.1);
+  border: 1px solid rgba(46, 217, 168, 0.25);
+  color: var(--mint);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+.hero-badge .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--mint);
+  animation: pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.glow-shape {
+  position: fixed;
+  width: 320px;
+  height: 320px;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.18;
+  z-index: -1;
+  pointer-events: none;
+}
+.glow-mint { background: var(--mint); top: -80px; right: -80px; }
+.glow-gold { background: var(--gold); bottom: -100px; left: -100px; }
+
+.step-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.step-row:last-child { border-bottom: none; }
+.step-num {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: var(--bg-panel-raised);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--mint);
+}
+.step-text strong { color: var(--text); display: block; margin-bottom: 2px; }
+.step-text span { color: var(--text-dim); font-size: 0.88rem; }
+
+.cta-row { display: flex; gap: 10px; margin-top: 20px; }
+.cta-row .btn { margin-top: 0; }
+
+.trust-row {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+.trust-item svg { flex-shrink: 0; }
+
+.site-footer {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}

@@ -9,47 +9,109 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5598441517366617" crossorigin="anonymous"></script>
 </head>
 <body>
+
+<div class="glow-shape glow-mint"></div>
+<div class="glow-shape glow-gold"></div>
+
 <div class="wrap">
 
-  <div class="brand">
+  <div class="brand reveal in">
     <div class="brand-mark"></div>
     <div class="brand-name">GanaAds</div>
   </div>
 
-  <h1>Gana puntos viendo anuncios cortos</h1>
-  <p>
-    GanaAds es una plataforma web donde puedes ver anuncios cortos a cambio de
-    puntos, que luego puedes convertir en saldo. Invita a tus amigos y gana un
-    bono adicional cuando ellos empiecen a participar también.
-  </p>
+  <div class="reveal in">
+    <div class="hero-badge"><span class="dot"></span> Plataforma activa</div>
+    <h1>Gana puntos viendo anuncios cortos</h1>
+    <p>
+      GanaAds es una plataforma web donde puedes ver anuncios cortos a cambio
+      de puntos, que luego puedes convertir en saldo. Invita a tus amigos y
+      gana un bono adicional cuando ellos empiecen a participar también.
+    </p>
+    <div class="cta-row">
+      <a href="auth.html" class="btn btn-primary" style="text-decoration:none">Crear cuenta gratis</a>
+      <a href="auth.html" class="btn btn-ghost" style="text-decoration:none">Ya tengo cuenta</a>
+    </div>
+  </div>
 
-  <div class="card">
+  <div class="card reveal" data-delay="1">
     <h2>¿Cómo funciona?</h2>
-    <p style="margin-bottom:10px">
-      <strong>1. Regístrate</strong> con tu correo electrónico en segundos.
-    </p>
-    <p style="margin-bottom:10px">
-      <strong>2. Mira anuncios</strong> cortos desde tu panel y acumula puntos
-      por cada uno que completes.
-    </p>
-    <p style="margin-bottom:10px">
-      <strong>3. Invita amigos</strong> con tu enlace personal y recibe un
-      bono cuando ellos vean su primer anuncio.
-    </p>
+    <div class="step-row">
+      <div class="step-num">1</div>
+      <div class="step-text">
+        <strong>Regístrate</strong>
+        <span>Con tu correo electrónico, en menos de un minuto.</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">2</div>
+      <div class="step-text">
+        <strong>Mira anuncios</strong>
+        <span>Cortos, desde tu panel, y acumula puntos por cada uno.</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">3</div>
+      <div class="step-text">
+        <strong>Invita amigos</strong>
+        <span>Comparte tu enlace personal y gana un bono cuando ellos empiecen.</span>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-num">4</div>
+      <div class="step-text">
+        <strong>Retira tu saldo</strong>
+        <span>Al alcanzar el mínimo establecido en la plataforma.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card reveal" data-delay="2">
+    <h2>Pensado para ser justo</h2>
     <p style="margin-bottom:0">
-      <strong>4. Retira tu saldo</strong> una vez alcances el mínimo
-      establecido en la plataforma.
+      El bono de referidos es de un solo nivel: solo ganas por las personas
+      que tú invitas directamente, no por cadenas de referidos. Todas las
+      solicitudes de retiro pasan por una revisión antes de procesarse.
     </p>
   </div>
 
-  <a href="auth.html" class="btn btn-primary" style="text-decoration:none">Crear cuenta gratis</a>
-  <a href="auth.html" class="btn btn-ghost" style="text-decoration:none">Ya tengo cuenta</a>
+  <div class="trust-row reveal" data-delay="3">
+    <div class="trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+      Datos protegidos
+    </div>
+    <div class="trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg>
+      Retiros revisados manualmente
+    </div>
+    <div class="trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Regístrate en 1 minuto
+    </div>
+  </div>
 
   <p style="margin-top:32px; font-size:0.8rem; text-align:center;">
     <a href="privacy.html">Política de Privacidad</a> ·
     <a href="terms.html">Términos de Servicio</a>
   </p>
 
+  <p class="site-footer">© 2026 ZonatrialApp by DanielReal. Todos los derechos reservados.</p>
+
 </div>
+
+<script>
+  const items = document.querySelectorAll('.reveal:not(.in)');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const delay = parseInt(entry.target.dataset.delay || '0', 10) * 100;
+        setTimeout(() => entry.target.classList.add('in'), delay);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  items.forEach((el) => observer.observe(el));
+</script>
+
 </body>
 </html>
