@@ -127,7 +127,14 @@ async function creditAdView() {
     const res = await fetch('/api/ads/view', { method: 'POST', headers: authHeaders });
     const data = await res.json();
     if (!res.ok) {
-      watchError.textContent = data.error || 'No se pudo registrar el anuncio.';
+      let errorMsg = data.error || 'No se pudo registrar el anuncio.';
+      if (data.resetAt) {
+        const resetTime = new Date(data.resetAt).toLocaleString('es-ES', {
+          hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit',
+        });
+        errorMsg += ` Se restablece el ${resetTime}.`;
+      }
+      watchError.textContent = errorMsg;
       watchError.classList.add('show');
     } else {
       watchSuccess.textContent = `¡Ganaste ${data.pointsEarned} puntos!` +

@@ -48,8 +48,12 @@ router.post('/view', requireAuth, async (req, res) => {
     const todayCount = parseInt(todayCountResult.rows[0].count, 10);
     if (todayCount >= MAX_ADS_PER_DAY) {
       await client.query('ROLLBACK');
+      const tomorrow = new Date();
+      tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+      tomorrow.setUTCHours(0, 0, 0, 0);
       return res.status(429).json({
-        error: `Alcanzaste el límite de ${MAX_ADS_PER_DAY} anuncios por día. Vuelve mañana.`,
+        error: `Alcanzaste el límite de ${MAX_ADS_PER_DAY} anuncios por día.`,
+        resetAt: tomorrow.toISOString(),
       });
     }
 
