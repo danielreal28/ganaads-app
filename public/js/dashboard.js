@@ -41,28 +41,6 @@ async function loadConfig() {
   document.getElementById('watch-copy').textContent =
     `Presiona el botón, mira el anuncio completo y recibe ${appConfig.pointsPerAd} puntos.`;
 
-  if (appConfig.adsensePublisherId) {
-    injectAdSenseScript(appConfig.adsensePublisherId);
-  }
-}
-
-function injectAdSenseScript(pubId) {
-  const meta = document.createElement('meta');
-  meta.name = 'google-adsense-account';
-  meta.content = pubId;
-  document.head.appendChild(meta);
-
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
-  script.setAttribute('data-ad-client', pubId);
-  document.head.appendChild(script);
-
-  window.adsbygoogle = window.adsbygoogle || [];
-  window.adsbygoogle.push({
-    google_ad_client: pubId,
-    enable_page_level_ads: false,
-  });
 }
 
 async function loadUser() {
