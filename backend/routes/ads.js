@@ -1,10 +1,10 @@
 const express = require('express');
 const { pool } = require('../db');
 const { requireAuth } = require('../middleware/auth');
+const { getCurrentPointsPerAd } = require('../pointsCalculator');
 
 const router = express.Router();
 
-const POINTS_PER_AD = parseInt(process.env.POINTS_PER_AD || '10', 10);
 const POINTS_REFERRAL_BONUS = parseInt(process.env.POINTS_REFERRAL_BONUS || '500', 10);
 const MAX_ADS_PER_DAY = parseInt(process.env.MAX_ADS_PER_DAY || '50', 10);
 const MIN_SECONDS_BETWEEN_ADS = parseInt(process.env.MIN_SECONDS_BETWEEN_ADS || '20', 10);
@@ -15,6 +15,10 @@ router.post('/view', requireAuth, async (req, res) => {
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
+
+    // Puntos por anuncio calculados dinámicamente según el RPM real
+    // configurado por el admin, manteniendo siempre el margen definido.
+    const POINTS_PER_AD = await getCurrentPointsPerAd(pool);
 
     // --- Protección contra fraude / abuso ---
 

@@ -2,13 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { initDb } = require('./db');
+const { initDb, pool } = require('./db');
 
 const authRoutes = require('./routes/auth');
 const adsRoutes = require('./routes/ads');
 const userRoutes = require('./routes/user');
 const withdrawalRoutes = require('./routes/withdrawals');
 const adminRoutes = require('./routes/admin');
+const { getCurrentPointsPerAd } = require('./pointsCalculator');
 
 const app = express();
 app.use(cors());
@@ -25,10 +26,11 @@ app.use('/api/admin', adminRoutes);
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Config pública mínima que el frontend necesita (ej. AdSense Publisher ID)
-app.get('/api/config', (req, res) => {
+app.get('/api/config', async (req, res) => {
+  const pointsPerAd = await getCurrentPointsPerAd(pool);
   res.json({
     adsensePublisherId: process.env.ADSENSE_PUBLISHER_ID || '',
-    pointsPerAd: parseInt(process.env.POINTS_PER_AD || '10', 10),
+    pointsPerAd,
     pointsPerUsdt: parseInt(process.env.POINTS_PER_USDT || '1000', 10),
     minWithdrawalUsdt: parseFloat(process.env.MIN_WITHDRAWAL_USDT || '5'),
   });

@@ -47,6 +47,16 @@ async function initDb() {
     );
   `);
 
+  // Guarda configuración ajustable desde el panel admin, como el RPM real
+  // reportado por AdSense, sin necesidad de tocar variables de entorno.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS app_settings (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL,
+      updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+    );
+  `);
+
   console.log('Base de datos lista (tablas verificadas/creadas).');
 }
 

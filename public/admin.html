@@ -34,6 +34,15 @@
     </div>
   </div>
 
+  <div class="card">
+    <h2>Ganancia real por anuncio (RPM)</h2>
+    <p id="rpm-info">Cargando...</p>
+    <label for="rpm-input">RPM actual reportado por AdSense (USDT por 1000 vistas)</label>
+    <input type="number" id="rpm-input" step="0.01" min="0" placeholder="Ej: 2.50">
+    <button class="btn btn-primary btn-lg" id="rpm-save-btn">Actualizar RPM</button>
+    <div class="success-msg" id="rpm-success"></div>
+  </div>
+
   <h1>Retiros pendientes</h1>
   <p>Aprueba solo después de haber enviado el USDT manualmente a la billetera del usuario.</p>
 
@@ -94,8 +103,40 @@ async function reject(id) {
   loadStats();
 }
 
+async function loadRpmSettings() {
+  const res = await fetch('/api/admin/settings', { headers: authHeaders });
+  if (!res.ok) return;
+  const s = await res.json();
+  const rpmText = s.currentRpmUsdt !== null
+    ? `RPM configurado: $${s.currentRpmUsdt} por 1000 vistas. Actualmente pagando ${s.currentPointsPerAd} puntos por anuncio (margen ${s.marginPercent}%).`
+    : `Aun no has configurado un RPM real. Usando valor conservador: $${s.fallbackRpmUsdt} por 1000 vistas (${s.currentPointsPerAd} puntos por anuncio).`;
+  document.getElementById('rpm-info').textContent = rpmText;
+  if (s.currentRpmUsdt !== null) {
+    document.getElementById('rpm-input').value = s.currentRpmUsdt;
+  }
+}
+
+document.getElementById('rpm-save-btn').addEventListener('click', async () => {
+  const rpmUsdt = document.getElementById('rpm-input').value;
+  const res = await fetch('/api/admin/settings', {
+    method: 'POST',
+    headers: authHeaders,
+    body: JSON.stringify({ rpmUsdt }),
+  });
+  const data = await res.json();
+  const successBox = document.getElementById('rpm-success');
+  if (res.ok) {
+    successBox.textContent = `Guardado. Ahora se pagan ${data.newPointsPerAd} puntos por anuncio.`;
+    successBox.classList.add('show');
+    loadRpmSettings();
+  } else {
+    alert(data.error || 'No se pudo guardar.');
+  }
+});
+
 load();
 loadStats();
+loadRpmSettings();
 </script>
 </body>
 </html>
