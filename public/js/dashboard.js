@@ -81,6 +81,12 @@ const watchSuccess = document.getElementById('watch-success');
 const adSlot = document.getElementById('ad-slot');
 
 function triggerMonetagAd() {
+  // Si estás conectado como administrador, NO se dispara el anuncio real
+  // (evita que tus propias pruebas cuenten como auto-clics ante Monetag).
+  if (window.currentUser && window.currentUser.is_admin) {
+    console.log('[Modo admin] Anuncio de Monetag simulado, no se disparó de verdad.');
+    return;
+  }
   const script = document.createElement('script');
   script.dataset.zone = '11639500';
   script.src = 'https://nap5k.com/tag.min.js';
