@@ -37,7 +37,7 @@ async function loadConfig() {
   const res = await fetch('/api/config');
   appConfig = await res.json();
   document.getElementById('withdraw-copy').textContent =
-    `Retiro mínimo: $${appConfig.minWithdrawalUsdt.toFixed(2)} USDT.`;
+    `Retiro mínimo: US$${appConfig.minWithdrawalUsdt.toFixed(2)} USDT.`;
   document.getElementById('watch-copy').textContent =
     `Presiona el botón, mira el anuncio completo y recibe ${appConfig.pointsPerAd} puntos.`;
 
@@ -51,7 +51,7 @@ async function loadUser() {
     return;
   }
   const user = await res.json();
-  document.getElementById('balance-usdt').textContent = `$${user.balance_usdt}`;
+  document.getElementById('balance-usdt').textContent = `US$${user.balance_usdt}`;
   document.getElementById('balance-points').textContent = `${user.balance_points} puntos`;
   document.getElementById('stat-referrals').textContent = user.referral_count;
   document.getElementById('stat-views').textContent = user.adViewsSinceWithdrawal;
@@ -232,7 +232,7 @@ withdrawBtn.addEventListener('click', async () => {
       withdrawError.textContent = data.error || 'No se pudo procesar la solicitud.';
       withdrawError.classList.add('show');
     } else {
-      withdrawSuccess.textContent = `Tu solicitud de $${data.amount_usdt} USDT está en revisión. Será pagada en un plazo de 6 a 12 horas.`;
+      withdrawSuccess.textContent = `Tu solicitud de US$${data.amount_usdt} USDT está en revisión. Será pagada en un plazo de 6 a 12 horas.`;
       withdrawSuccess.classList.add('show');
       document.getElementById('wallet-address').value = '';
       await loadUser();
@@ -263,7 +263,7 @@ async function loadWithdrawals() {
   container.innerHTML = list
     .map((w) => `
       <div class="list-item">
-        <div>$${w.amount_usdt} USDT<div class="muted">${new Date(w.requested_at).toLocaleDateString()}</div></div>
+        <div>US$${w.amount_usdt} USDT<div class="muted">${new Date(w.requested_at).toLocaleDateString()}</div></div>
         <span class="badge ${badgeClass[w.status]}">${badgeText[w.status]}</span>
       </div>
     `)

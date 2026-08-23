@@ -65,7 +65,7 @@ async function loadStats() {
   const stats = await res.json();
   document.getElementById('stat-total-users').textContent = stats.totalUsers;
   document.getElementById('stat-pending').textContent = stats.pendingWithdrawals;
-  document.getElementById('stat-paid').textContent = `$${stats.totalPaidUsdt}`;
+  document.getElementById('stat-paid').textContent = `US$${stats.totalPaidUsdt}`;
 }
 
 async function load() {
@@ -84,7 +84,7 @@ async function load() {
   container.innerHTML = list.map(w => `
     <div class="card">
       <strong>${w.email}</strong>
-      <p style="margin:6px 0">Monto: $${w.amount_usdt} USDT</p>
+      <p style="margin:6px 0">Monto: US$${w.amount_usdt} USDT</p>
       <p style="margin:6px 0; word-break:break-all">Billetera: ${w.wallet_address}</p>
       <button class="btn btn-primary btn-lg" onclick="approve(${w.id})">Marcar como pagado</button>
       <button class="btn btn-ghost btn-lg" onclick="reject(${w.id})">Rechazar</button>
@@ -108,8 +108,8 @@ async function loadRpmSettings() {
   if (!res.ok) return;
   const s = await res.json();
   const rpmText = s.currentRpmUsdt !== null
-    ? `RPM configurado: $${s.currentRpmUsdt} por 1000 vistas. Actualmente pagando ${s.currentPointsPerAd} puntos por anuncio (margen ${s.marginPercent}%).`
-    : `Aun no has configurado un RPM real. Usando valor conservador: $${s.fallbackRpmUsdt} por 1000 vistas (${s.currentPointsPerAd} puntos por anuncio).`;
+    ? `RPM configurado: US$${s.currentRpmUsdt} por 1000 vistas. Actualmente pagando ${s.currentPointsPerAd} puntos por anuncio (margen ${s.marginPercent}%).`
+    : `Aun no has configurado un RPM real. Usando valor conservador: US$${s.fallbackRpmUsdt} por 1000 vistas (${s.currentPointsPerAd} puntos por anuncio).`;
   document.getElementById('rpm-info').textContent = rpmText;
   if (s.currentRpmUsdt !== null) {
     document.getElementById('rpm-input').value = s.currentRpmUsdt;
