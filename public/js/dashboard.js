@@ -80,21 +80,7 @@ const watchError = document.getElementById('watch-error');
 const watchSuccess = document.getElementById('watch-success');
 const adSlot = document.getElementById('ad-slot');
 
-function triggerMonetagAd() {
-  // Inyecta el script de Monetag SOLO en este momento (al presionar el
-  // botón), y lo elimina justo después para que no se dispare con otros
-  // clics en cualquier parte de la página.
-  const script = document.createElement('script');
-  script.dataset.zone = '11639419';
-  script.src = 'https://al5sm.com/tag.min.js';
-  document.body.appendChild(script);
-  setTimeout(() => {
-    script.remove();
-  }, 3000);
-}
-
 watchBtn.addEventListener('click', () => {
-  triggerMonetagAd();
   watchError.classList.remove('show');
   watchSuccess.classList.remove('show');
   watchBtn.disabled = true;
