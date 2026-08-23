@@ -80,7 +80,15 @@ const watchError = document.getElementById('watch-error');
 const watchSuccess = document.getElementById('watch-success');
 const adSlot = document.getElementById('ad-slot');
 
+function triggerMonetagAd() {
+  const script = document.createElement('script');
+  script.dataset.zone = '11639500';
+  script.src = 'https://nap5k.com/tag.min.js';
+  document.body.appendChild(script);
+}
+
 watchBtn.addEventListener('click', () => {
+  triggerMonetagAd();
   watchError.classList.remove('show');
   watchSuccess.classList.remove('show');
   watchBtn.disabled = true;
@@ -114,11 +122,11 @@ watchBtn.addEventListener('click', () => {
   } else {
     // Modo de prueba local: si aún no configuraste AdSense, simula el anuncio
     // con una espera de 5 segundos para que puedas probar el flujo completo.
-    adSlot.textContent = 'Modo de prueba: simulando anuncio (5s)...';
+    adSlot.textContent = 'Modo de prueba: simulando anuncio (10s)...';
     setTimeout(() => {
       adSlot.textContent = 'El anuncio aparecerá aquí';
       creditAdView();
-    }, 5000);
+    }, 10000);
   }
 });
 
