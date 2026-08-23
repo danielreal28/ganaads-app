@@ -282,4 +282,10 @@ document.getElementById('clear-history-btn').addEventListener('click', async () 
   await loadConfig();
   await loadUser();
   await loadAdHistory();
+
+  // Muestra el banner de Domingo Dorado si hoy es domingo
+  const today = new Date().getDay(); // 0 = domingo, en hora local del navegador
+  if (today === 0) {
+    document.getElementById('sunday-banner').style.display = 'block';
+  }
 })();

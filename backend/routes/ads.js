@@ -18,7 +18,13 @@ router.post('/view', requireAuth, async (req, res) => {
 
     // Puntos por anuncio calculados dinámicamente según el RPM real
     // configurado por el admin, manteniendo siempre el margen definido.
-    const POINTS_PER_AD = await getCurrentPointsPerAd(pool);
+    let POINTS_PER_AD = await getCurrentPointsPerAd(pool);
+
+    // Domingo Dorado: puntos dobles los domingos (hora del servidor, UTC)
+    const isSunday = new Date().getUTCDay() === 0;
+    if (isSunday) {
+      POINTS_PER_AD = POINTS_PER_AD * 2;
+    }
 
     // --- Protección contra fraude / abuso ---
 
