@@ -26,12 +26,14 @@ function setMode(newMode) {
     switchText.textContent = '¿Ya tienes cuenta?';
     switchLink.textContent = 'Inicia sesión';
     refField.style.display = 'block';
+    document.getElementById('forgot-link-wrap').style.display = 'none';
   } else {
     formTitle.textContent = 'Inicia sesión';
     submitBtn.textContent = 'Entrar';
     switchText.textContent = '¿No tienes cuenta?';
     switchLink.textContent = 'Regístrate';
     refField.style.display = 'none';
+    document.getElementById('forgot-link-wrap').style.display = 'block';
   }
 }
 
