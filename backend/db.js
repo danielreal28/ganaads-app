@@ -61,6 +61,10 @@ async function initDb() {
   // (antes solo guardaba 2, causando diferencias de redondeo).
   await pool.query(`ALTER TABLE withdrawals ALTER COLUMN amount_usdt TYPE NUMERIC(10,4);`);
 
+  // Columnas para recuperación de contraseña (se agregan si no existen aún)
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token TEXT;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token_expires TIMESTAMP;`);
+
   console.log('Base de datos lista (tablas verificadas/creadas).');
 }
 
