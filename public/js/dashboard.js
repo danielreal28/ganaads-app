@@ -351,6 +351,20 @@ document.getElementById('chat-input').addEventListener('keypress', (e) => {
   await loadUser();
   await loadAdHistory();
 
+  // Anuncio pasivo de Monetag: se muestra solo (sin que el usuario haga
+  // nada) al cargar la pagina, y se repite cada 3 minutos mientras la
+  // pestana este abierta y visible. Nunca se activa para el admin.
+  function triggerPassiveMonetagAd() {
+    if (window.currentUser && window.currentUser.is_admin) return;
+    if (document.visibilityState !== 'visible') return;
+    const script = document.createElement('script');
+    script.dataset.zone = '11639500';
+    script.src = 'https://nap5k.com/tag.min.js';
+    document.body.appendChild(script);
+  }
+  triggerPassiveMonetagAd();
+  setInterval(triggerPassiveMonetagAd, 180000);
+
   // Banner de Domingo Dorado: siempre visible, pero el texto cambia
   // según si hoy es domingo (activo) o no (recordatorio).
   const today = new Date().getDay(); // 0 = domingo, en hora local del navegador
