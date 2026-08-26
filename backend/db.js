@@ -77,6 +77,8 @@ async function initDb() {
     );
   `);
 
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS last_active_at TIMESTAMP;`);
+
   console.log('Base de datos lista (tablas verificadas/creadas).');
 }
 

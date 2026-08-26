@@ -73,4 +73,21 @@ router.post('/settings', requireAuth, requireAdmin, async (req, res) => {
   }
 });
 
+// GET /api/admin/users - lista de usuarios con estado en linea (activo en los ultimos 5 min)
+router.get('/users', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT
+        id, email, balance_points, last_active_at,
+        (last_active_at > NOW() - INTERVAL '5 minutes') AS is_online
+      FROM users
+      ORDER BY last_active_at DESC NULLS LAST
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error en /admin/users:', err);
+    res.status(500).json({ error: 'No se pudo cargar la lista de usuarios.' });
+  }
+});
+
 module.exports = router;

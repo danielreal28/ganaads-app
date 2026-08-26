@@ -56,6 +56,11 @@
     </div>
   </div>
 
+  <div class="card">
+    <h2>Usuarios <span id="online-count" style="color:var(--mint)"></span></h2>
+    <div id="users-list"></div>
+  </div>
+
   <h1>Retiros pendientes</h1>
   <p>Aprueba solo después de haber enviado el USDT manualmente a la billetera del usuario.</p>
 
@@ -219,10 +224,35 @@ document.getElementById('admin-chat-input').addEventListener('keypress', (e) => 
   }
 });
 
+async function loadUsersList() {
+  const res = await fetch('/api/admin/users', { headers: authHeaders });
+  const users = await res.json();
+  const online = users.filter(u => u.is_online).length;
+  document.getElementById('online-count').textContent = `(${online} en linea ahora)`;
+
+  document.getElementById('users-list').innerHTML = users.map(u => {
+    const dotColor = u.is_online ? 'var(--mint)' : 'var(--text-dim)';
+    const lastSeen = u.last_active_at
+      ? new Date(u.last_active_at).toLocaleString()
+      : 'Nunca';
+    return `
+      <div class="list-item">
+        <div>
+          <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${dotColor}; margin-right:8px;"></span>
+          ${u.email}
+          <div class="muted">Ultima actividad: ${lastSeen}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
 load();
 loadStats();
 loadRpmSettings();
 loadConversations();
+loadUsersList();
+setInterval(loadUsersList, 15000);
 </script>
 </body>
 </html>
