@@ -111,7 +111,7 @@ watchBtn.addEventListener('click', () => {
       type: 'reward',
       name: 'ver_anuncio_recompensa',
       beforeReward: (showAdFn) => {
-        adSlot.textContent = 'Reproduciendo anuncio...';
+        adSlot.textContent = 'Reproduciendo anuncio... (si ves una notificación, solo ciérrala con la X, no le des clic)';
         showAdFn();
       },
       adDismissed: () => {
@@ -131,7 +131,7 @@ watchBtn.addEventListener('click', () => {
   } else {
     // Modo de prueba local: si aún no configuraste AdSense, simula el anuncio
     // con una espera de 5 segundos para que puedas probar el flujo completo.
-    adSlot.textContent = 'Modo de prueba: simulando anuncio (5s)...';
+    adSlot.textContent = 'Simulando anuncio (5s)... (si ves una notificación, solo ciérrala con la X, no le des clic)';
     setTimeout(() => {
       adSlot.textContent = 'El anuncio aparecerá aquí';
       creditAdView();
