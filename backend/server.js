@@ -9,6 +9,7 @@ const adsRoutes = require('./routes/ads');
 const userRoutes = require('./routes/user');
 const withdrawalRoutes = require('./routes/withdrawals');
 const adminRoutes = require('./routes/admin');
+const supportRoutes = require('./routes/support');
 const { getCurrentPointsPerAd } = require('./pointsCalculator');
 
 const app = express();
@@ -21,6 +22,7 @@ app.use('/api/ads', adsRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/withdrawals', withdrawalRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/support', supportRoutes);
 
 // Sirve el frontend estático (carpeta /public) en la raíz del sitio
 app.use(express.static(path.join(__dirname, '..', 'public')));

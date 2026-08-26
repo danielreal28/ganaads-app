@@ -85,12 +85,25 @@
     </div>
   </section>
 
+  <section id="section-support" style="display:none">
+    <div class="card">
+      <h2>Chat de soporte</h2>
+      <p>Escribenos si tienes alguna duda. Te responderemos aqui mismo.</p>
+      <div id="chat-messages" style="max-height:340px; overflow-y:auto; margin-bottom:14px;"></div>
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="chat-input" placeholder="Escribe tu mensaje...">
+        <button class="btn btn-primary" id="chat-send-btn" style="width:auto; margin:0; padding:12px 20px;">Enviar</button>
+      </div>
+    </div>
+  </section>
+
 </div>
 
 <div class="nav-tabs">
   <div class="nav-tab active" data-section="watch">Ver anuncios</div>
   <div class="nav-tab" data-section="referrals">Referidos</div>
   <div class="nav-tab" data-section="withdraw">Retirar</div>
+  <div class="nav-tab" data-section="support">Soporte</div>
   <div class="nav-tab" id="admin-tab" style="display:none">Admin</div>
   <div class="nav-tab" id="logout-tab">Salir</div>
 </div>

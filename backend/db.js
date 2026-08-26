@@ -65,6 +65,18 @@ async function initDb() {
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token TEXT;`);
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token_expires TIMESTAMP;`);
 
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS support_messages (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES users(id),
+      sender TEXT NOT NULL,
+      message TEXT NOT NULL,
+      created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+      read_by_admin BOOLEAN NOT NULL DEFAULT FALSE,
+      read_by_user BOOLEAN NOT NULL DEFAULT FALSE
+    );
+  `);
+
   console.log('Base de datos lista (tablas verificadas/creadas).');
 }
 

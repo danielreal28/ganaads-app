@@ -14,6 +14,7 @@ const sections = {
   watch: document.getElementById('section-watch'),
   referrals: document.getElementById('section-referrals'),
   withdraw: document.getElementById('section-withdraw'),
+  support: document.getElementById('section-support'),
 };
 
 tabs.forEach((tab) => {
@@ -24,6 +25,7 @@ tabs.forEach((tab) => {
     sections[tab.dataset.section].style.display = 'block';
     if (tab.dataset.section === 'referrals') loadReferrals();
     if (tab.dataset.section === 'withdraw') loadWithdrawals();
+    if (tab.dataset.section === 'support') loadChat();
   });
 });
 
@@ -270,6 +272,55 @@ document.getElementById('clear-history-btn').addEventListener('click', async () 
   if (!confirmClear) return;
   await fetch('/api/withdrawals/history', { method: 'DELETE', headers: authHeaders });
   await loadWithdrawals();
+});
+
+let chatPollInterval = null;
+
+async function loadChat() {
+  const res = await fetch('/api/support/mine', { headers: authHeaders });
+  const messages = await res.json();
+  renderChatMessages(messages);
+  if (!chatPollInterval) {
+    chatPollInterval = setInterval(async () => {
+      const r = await fetch('/api/support/mine', { headers: authHeaders });
+      const msgs = await r.json();
+      renderChatMessages(msgs);
+    }, 5000);
+  }
+}
+
+function renderChatMessages(messages) {
+  const container = document.getElementById('chat-messages');
+  if (messages.length === 0) {
+    container.innerHTML = '<p class="muted">Aun no has escrito nada.</p>';
+    return;
+  }
+  container.innerHTML = messages.map(function(m) {
+    var isAdmin = m.sender === 'admin';
+    return '<div style="margin-bottom:10px; display:flex; justify-content:' + (isAdmin ? 'flex-start' : 'flex-end') + '">' +
+      '<div style="max-width:75%; padding:10px 14px; border-radius:12px; background:' + (isAdmin ? 'var(--bg-panel-raised)' : 'var(--mint)') + '; color:' + (isAdmin ? 'var(--text)' : '#06231B') + ';">' +
+      '<div style="font-size:0.85rem;">' + m.message + '</div></div></div>';
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+document.getElementById('chat-send-btn').addEventListener('click', async () => {
+  const input = document.getElementById('chat-input');
+  const message = input.value.trim();
+  if (!message) return;
+  input.value = '';
+  await fetch('/api/support/send', {
+    method: 'POST',
+    headers: authHeaders,
+    body: JSON.stringify({ message: message }),
+  });
+  await loadChat();
+});
+
+document.getElementById('chat-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    document.getElementById('chat-send-btn').click();
+  }
 });
 
 // ---------- Inicio ----------

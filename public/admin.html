@@ -43,6 +43,19 @@
     <div class="success-msg" id="rpm-success"></div>
   </div>
 
+  <div class="card">
+    <h2>Chat de soporte</h2>
+    <div id="conversations-list" style="margin-bottom:14px;"></div>
+    <div id="chat-view" style="display:none;">
+      <button class="btn btn-ghost" id="back-to-list-btn" style="width:auto; margin:0 0 10px; padding:8px 14px;">← Volver a la lista</button>
+      <div id="admin-chat-messages" style="max-height:300px; overflow-y:auto; margin-bottom:12px;"></div>
+      <div style="display:flex; gap:8px;">
+        <input type="text" id="admin-chat-input" placeholder="Escribe tu respuesta...">
+        <button class="btn btn-primary" id="admin-chat-send-btn" style="width:auto; margin:0; padding:12px 20px;">Enviar</button>
+      </div>
+    </div>
+  </div>
+
   <h1>Retiros pendientes</h1>
   <p>Aprueba solo después de haber enviado el USDT manualmente a la billetera del usuario.</p>
 
@@ -134,9 +147,82 @@ document.getElementById('rpm-save-btn').addEventListener('click', async () => {
   }
 });
 
+let currentChatUserId = null;
+
+async function loadConversations() {
+  const res = await fetch('/api/support/conversations', { headers: authHeaders });
+  const conversations = await res.json();
+  const container = document.getElementById('conversations-list');
+
+  if (conversations.length === 0) {
+    container.innerHTML = '<p class="muted">Aún no hay mensajes de soporte.</p>';
+    return;
+  }
+
+  container.innerHTML = conversations.map((c) => `
+    <div class="list-item" style="cursor:pointer" onclick="openConversation(${c.user_id}, '${c.email}')">
+      <div>${c.email}</div>
+      ${c.unread_count > 0 ? `<span class="badge badge-pending">${c.unread_count} nuevo(s)</span>` : ''}
+    </div>
+  `).join('');
+}
+
+async function openConversation(userId, email) {
+  currentChatUserId = userId;
+  document.getElementById('conversations-list').style.display = 'none';
+  document.getElementById('chat-view').style.display = 'block';
+  await loadAdminChatMessages();
+}
+
+async function loadAdminChatMessages() {
+  const res = await fetch(`/api/support/conversation/${currentChatUserId}`, { headers: authHeaders });
+  const messages = await res.json();
+  const container = document.getElementById('admin-chat-messages');
+
+  container.innerHTML = messages.map((m) => {
+    const isAdmin = m.sender === 'admin';
+    return `
+      <div style="margin-bottom:10px; display:flex; ${isAdmin ? 'justify-content:flex-end' : 'justify-content:flex-start'}">
+        <div style="max-width:75%; padding:10px 14px; border-radius:12px; background:${isAdmin ? 'var(--mint)' : 'var(--bg-panel-raised)'}; color:${isAdmin ? '#06231B' : 'var(--text)'};">
+          <div style="font-size:0.85rem;">${m.message}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+document.getElementById('back-to-list-btn').addEventListener('click', () => {
+  currentChatUserId = null;
+  document.getElementById('conversations-list').style.display = 'block';
+  document.getElementById('chat-view').style.display = 'none';
+  loadConversations();
+});
+
+document.getElementById('admin-chat-send-btn').addEventListener('click', async () => {
+  const input = document.getElementById('admin-chat-input');
+  const message = input.value.trim();
+  if (!message || !currentChatUserId) return;
+
+  input.value = '';
+  await fetch(`/api/support/reply/${currentChatUserId}`, {
+    method: 'POST',
+    headers: authHeaders,
+    body: JSON.stringify({ message }),
+  });
+  await loadAdminChatMessages();
+});
+
+document.getElementById('admin-chat-input').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    document.getElementById('admin-chat-send-btn').click();
+  }
+});
+
 load();
 loadStats();
 loadRpmSettings();
+loadConversations();
 </script>
 </body>
 </html>
