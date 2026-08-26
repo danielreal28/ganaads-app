@@ -93,6 +93,7 @@ function triggerMonetagAd() {
   script.dataset.zone = '11639500';
   script.src = 'https://nap5k.com/tag.min.js';
   document.body.appendChild(script);
+  console.log('[Monetag] Anuncio disparado por CLIC del boton, ' + new Date().toLocaleTimeString());
 }
 
 watchBtn.addEventListener('click', () => {
@@ -361,6 +362,7 @@ document.getElementById('chat-input').addEventListener('keypress', (e) => {
     script.dataset.zone = '11639500';
     script.src = 'https://nap5k.com/tag.min.js';
     document.body.appendChild(script);
+    console.log('[Monetag] Anuncio PASIVO disparado, ' + new Date().toLocaleTimeString());
   }
   triggerPassiveMonetagAd();
   setInterval(triggerPassiveMonetagAd, 180000);
