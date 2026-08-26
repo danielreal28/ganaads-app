@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard.html
+Disallow: /admin.html
+Disallow: /reset-password.html
+Disallow: /api/
+
+Sitemap: https://ganaads-web.onrender.com/sitemap.xml
