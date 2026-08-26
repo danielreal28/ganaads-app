@@ -21,6 +21,19 @@ router.get('/mine', requireAuth, async (req, res) => {
   }
 });
 
+router.get('/unread-count', requireAuth, async (req, res) => {
+  try {
+    const result = await pool.query(
+      "SELECT COUNT(*) FROM support_messages WHERE user_id = $1 AND sender = 'admin' AND read_by_user = FALSE",
+      [req.userId]
+    );
+    res.json({ count: parseInt(result.rows[0].count, 10) });
+  } catch (err) {
+    console.error('Error en /support/unread-count:', err);
+    res.status(500).json({ error: 'No se pudo verificar mensajes.' });
+  }
+});
+
 router.post('/send', requireAuth, async (req, res) => {
   const { message } = req.body;
   if (!message || !message.trim()) {

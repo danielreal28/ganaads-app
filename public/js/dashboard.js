@@ -25,7 +25,7 @@ tabs.forEach((tab) => {
     sections[tab.dataset.section].style.display = 'block';
     if (tab.dataset.section === 'referrals') loadReferrals();
     if (tab.dataset.section === 'withdraw') loadWithdrawals();
-    if (tab.dataset.section === 'support') loadChat();
+    if (tab.dataset.section === 'support') { loadChat(); setTimeout(checkUnreadSupport, 1000); }
   });
 });
 
@@ -130,11 +130,11 @@ watchBtn.addEventListener('click', () => {
   } else {
     // Modo de prueba local: si aún no configuraste AdSense, simula el anuncio
     // con una espera de 5 segundos para que puedas probar el flujo completo.
-    adSlot.textContent = 'Modo de prueba: simulando anuncio (10s)...';
+    adSlot.textContent = 'Modo de prueba: simulando anuncio (5s)...';
     setTimeout(() => {
       adSlot.textContent = 'El anuncio aparecerá aquí';
       creditAdView();
-    }, 10000);
+    }, 5000);
   }
 });
 
@@ -275,6 +275,28 @@ document.getElementById('clear-history-btn').addEventListener('click', async () 
 });
 
 let chatPollInterval = null;
+let unreadPollInterval = null;
+
+async function checkUnreadSupport() {
+  try {
+    const res = await fetch('/api/support/unread-count', { headers: authHeaders });
+    const data = await res.json();
+    const badge = document.getElementById('support-badge');
+    if (data.count > 0) {
+      badge.textContent = data.count;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  } catch (err) {
+    // silencioso, no interrumpe la app si falla
+  }
+}
+
+if (!unreadPollInterval) {
+  checkUnreadSupport();
+  unreadPollInterval = setInterval(checkUnreadSupport, 8000);
+}
 
 async function loadChat() {
   const res = await fetch('/api/support/mine', { headers: authHeaders });
@@ -329,9 +351,13 @@ document.getElementById('chat-input').addEventListener('keypress', (e) => {
   await loadUser();
   await loadAdHistory();
 
-  // Muestra el banner de Domingo Dorado si hoy es domingo
+  // Banner de Domingo Dorado: siempre visible, pero el texto cambia
+  // según si hoy es domingo (activo) o no (recordatorio).
   const today = new Date().getDay(); // 0 = domingo, en hora local del navegador
+  const sundayBanner = document.getElementById('sunday-banner');
   if (today === 0) {
-    document.getElementById('sunday-banner').style.display = 'block';
+    sundayBanner.textContent = '🎉 ¡Hoy es Domingo Dorado! Ganas el DOBLE de puntos por cada anuncio.';
+  } else {
+    sundayBanner.textContent = '📅 Recuerda: los domingos ganas el DOBLE de puntos por cada anuncio. ¡Vuelve ese día!';
   }
 })();
