@@ -43,6 +43,18 @@ async function loadConfig() {
   document.getElementById('watch-copy').textContent =
     `Presiona el botón, mira el anuncio completo y recibe ${appConfig.pointsPerAd} puntos.`;
 
+
+  // Inicializa la Ad Placement API de Google, necesaria para que
+  // window.adBreak funcione con anuncios reales (ya que AdSense fue aprobado).
+  if (appConfig.adsensePublisherId && window.__adsbygoogleInitialized === undefined) {
+    window.__adsbygoogleInitialized = true;
+    window.adsbygoogle = window.adsbygoogle || [];
+    window.adsbygoogle.push({
+      preloadAdBreaks: 'on',
+      sound: 'on',
+      onReady: function() { console.log('[AdSense] Ad Placement API lista.'); }
+    });
+  }
 }
 
 async function loadUser() {
