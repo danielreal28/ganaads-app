@@ -82,22 +82,7 @@ const watchError = document.getElementById('watch-error');
 const watchSuccess = document.getElementById('watch-success');
 const adSlot = document.getElementById('ad-slot');
 
-function triggerMonetagAd() {
-  // Si estás conectado como administrador, NO se dispara el anuncio real
-  // (evita que tus propias pruebas cuenten como auto-clics ante Monetag).
-  if (window.currentUser && window.currentUser.is_admin) {
-    console.log('[Modo admin] Anuncio de Monetag simulado, no se disparó de verdad.');
-    return;
-  }
-  const script = document.createElement('script');
-  script.dataset.zone = '11639500';
-  script.src = 'https://nap5k.com/tag.min.js';
-  document.body.appendChild(script);
-  console.log('[Monetag] Anuncio disparado por CLIC del boton, ' + new Date().toLocaleTimeString());
-}
-
 watchBtn.addEventListener('click', () => {
-  triggerMonetagAd();
   watchError.classList.remove('show');
   watchSuccess.classList.remove('show');
   watchBtn.disabled = true;
@@ -111,7 +96,7 @@ watchBtn.addEventListener('click', () => {
       type: 'reward',
       name: 'ver_anuncio_recompensa',
       beforeReward: (showAdFn) => {
-        adSlot.innerHTML = '<div style="font-size:0.8rem;">Reproduciendo anuncio...</div><div style="font-size:1rem; color:var(--text); font-weight:600;">Si ves una notificación, solo ciérrala con la X. No le des clic.</div>';
+        adSlot.innerHTML = '<div style="font-size:0.8rem;">Reproduciendo anuncio...</div>';
         showAdFn();
       },
       adDismissed: () => {
@@ -131,7 +116,7 @@ watchBtn.addEventListener('click', () => {
   } else {
     // Modo de prueba local: si aún no configuraste AdSense, simula el anuncio
     // con una espera de 5 segundos para que puedas probar el flujo completo.
-    adSlot.innerHTML = '<div style="font-size:0.8rem;">Simulando anuncio (5s)...</div><div style="font-size:1rem; color:var(--text); font-weight:600;">Si ves una notificación, solo ciérrala con la X. No le des clic.</div>';
+    adSlot.innerHTML = '<div style="font-size:0.8rem;">Simulando anuncio (5s)...</div>';
     setTimeout(() => {
       adSlot.textContent = 'El anuncio aparecerá aquí';
       creditAdView();
@@ -351,21 +336,6 @@ document.getElementById('chat-input').addEventListener('keypress', (e) => {
   await loadConfig();
   await loadUser();
   await loadAdHistory();
-
-  // Anuncio pasivo de Monetag: se muestra solo (sin que el usuario haga
-  // nada) al cargar la pagina, y se repite cada 3 minutos mientras la
-  // pestana este abierta y visible. Nunca se activa para el admin.
-  function triggerPassiveMonetagAd() {
-    if (window.currentUser && window.currentUser.is_admin) return;
-    if (document.visibilityState !== 'visible') return;
-    const script = document.createElement('script');
-    script.dataset.zone = '11639500';
-    script.src = 'https://nap5k.com/tag.min.js';
-    document.body.appendChild(script);
-    console.log('[Monetag] Anuncio PASIVO disparado, ' + new Date().toLocaleTimeString());
-  }
-  triggerPassiveMonetagAd();
-  setInterval(triggerPassiveMonetagAd, 180000);
 
   // Banner de Domingo Dorado: siempre visible, pero el texto cambia
   // según si hoy es domingo (activo) o no (recordatorio).
