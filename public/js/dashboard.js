@@ -105,7 +105,7 @@ async function triggerAdMobRewardedAd() {
       await listener.remove();
       await creditAdView();
     });
-    await AdMobPlugin.prepareRewardVideoAd({ adId: 'ca-app-pub-5598441517366617/8216597983' });
+    await AdMobPlugin.prepareRewardVideoAd({ adId: 'ca-app-pub-3940256099942544/5224354917' });
     await AdMobPlugin.showRewardVideoAd();
   } catch (err) {
     console.error('[AdMob] Error mostrando anuncio:', err);
