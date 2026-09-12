@@ -96,11 +96,42 @@ const watchError = document.getElementById('watch-error');
 const watchSuccess = document.getElementById('watch-success');
 const adSlot = document.getElementById('ad-slot');
 
+// Anuncio recompensado de AdMob, SOLO cuando la app corre dentro de la
+// app movil de Capacitor (no en el navegador web normal).
+async function triggerAdMobRewardedAd() {
+  try {
+    const AdMobPlugin = window.Capacitor.Plugins.AdMob;
+    const listener = await AdMobPlugin.addListener('onRewardedVideoAdReward', async () => {
+      await listener.remove();
+      await creditAdView();
+    });
+    await AdMobPlugin.prepareRewardVideoAd({ adId: 'ca-app-pub-5598441517366617/8216597983' });
+    await AdMobPlugin.showRewardVideoAd();
+  } catch (err) {
+    console.error('[AdMob] Error mostrando anuncio:', err);
+    watchError.textContent = 'No se pudo cargar el anuncio. Intenta de nuevo.';
+    watchError.classList.add('show');
+    resetWatchButton();
+  }
+}
+
+const isNativeApp = window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform();
+
+if (isNativeApp && window.Capacitor.Plugins.AdMob) {
+  window.Capacitor.Plugins.AdMob.initialize({});
+}
+
 watchBtn.addEventListener('click', () => {
   watchError.classList.remove('show');
   watchSuccess.classList.remove('show');
   watchBtn.disabled = true;
   watchBtn.innerHTML = '<span class="spin"></span>Cargando anuncio...';
+
+  if (isNativeApp) {
+    adSlot.innerHTML = '<div style="font-size:0.8rem;">Cargando anuncio de la app...</div>';
+    triggerAdMobRewardedAd();
+    return;
+  }
 
   // Usa la Ad Placement API de Google (adBreak) diseñada específicamente
   // para anuncios recompensados en la web. Requiere tener AdSense aprobado
