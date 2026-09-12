@@ -127,10 +127,16 @@ watchBtn.addEventListener('click', () => {
   watchBtn.disabled = true;
   watchBtn.innerHTML = '<span class="spin"></span>Cargando anuncio...';
 
+  const debugInfo = 'Capacitor existe: ' + (typeof window.Capacitor !== 'undefined') +
+    ' | isNativePlatform: ' + (window.Capacitor && typeof window.Capacitor.isNativePlatform === 'function' ? window.Capacitor.isNativePlatform() : 'N/A') +
+    ' | AdMob existe: ' + (window.Capacitor && window.Capacitor.Plugins ? typeof window.Capacitor.Plugins.AdMob !== 'undefined' : 'N/A');
+
   if (isNativeApp) {
-    adSlot.innerHTML = '<div style="font-size:0.8rem;">Cargando anuncio de la app...</div>';
+    adSlot.innerHTML = '<div style="font-size:0.75rem; word-break:break-word;">' + debugInfo + '</div>';
     triggerAdMobRewardedAd();
     return;
+  } else {
+    console.log('[Diagnostico]', debugInfo);
   }
 
   // Usa la Ad Placement API de Google (adBreak) diseñada específicamente
