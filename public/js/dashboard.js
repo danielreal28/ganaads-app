@@ -15,6 +15,7 @@ const sections = {
   referrals: document.getElementById('section-referrals'),
   withdraw: document.getElementById('section-withdraw'),
   support: document.getElementById('section-support'),
+  games: document.getElementById('section-games'),
 };
 
 tabs.forEach((tab) => {
@@ -26,6 +27,7 @@ tabs.forEach((tab) => {
     if (tab.dataset.section === 'referrals') loadReferrals();
     if (tab.dataset.section === 'withdraw') loadWithdrawals();
     if (tab.dataset.section === 'support') { loadChat(); setTimeout(checkUnreadSupport, 1000); }
+    if (tab.dataset.section === 'games') loadSpinStatus();
   });
 });
 
@@ -340,6 +342,61 @@ document.getElementById('chat-send-btn').addEventListener('click', async () => {
 document.getElementById('chat-input').addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
     document.getElementById('chat-send-btn').click();
+  }
+});
+
+async function loadSpinStatus() {
+  const res = await fetch('/api/games/spin-status', { headers: authHeaders });
+  const data = await res.json();
+  const spinBtn = document.getElementById('spin-btn');
+  const statusText = document.getElementById('spin-status-text');
+
+  if (data.canSpin) {
+    spinBtn.disabled = false;
+    spinBtn.textContent = 'Girar ruleta';
+    statusText.textContent = '';
+  } else {
+    spinBtn.disabled = true;
+    spinBtn.textContent = 'Ya girada hoy';
+    const nextTime = new Date(data.nextSpinAt).toLocaleString();
+    statusText.textContent = 'Podras girar de nuevo: ' + nextTime;
+  }
+}
+
+document.getElementById('spin-btn').addEventListener('click', async () => {
+  const spinBtn = document.getElementById('spin-btn');
+  const wheel = document.getElementById('wheel-visual');
+  const successBox = document.getElementById('spin-success');
+  const errorBox = document.getElementById('spin-error');
+
+  successBox.classList.remove('show');
+  errorBox.classList.remove('show');
+  spinBtn.disabled = true;
+
+  const currentRotation = wheel.style.transform
+    ? parseInt(wheel.style.transform.replace(/[^0-9]/g, ''), 10) || 0
+    : 0;
+  wheel.style.transform = 'rotate(' + (currentRotation + 1800 + Math.floor(Math.random() * 360)) + 'deg)';
+
+  try {
+    const res = await fetch('/api/games/spin', { method: 'POST', headers: authHeaders });
+    const data = await res.json();
+
+    setTimeout(async () => {
+      if (!res.ok) {
+        errorBox.textContent = data.error || 'No se pudo girar.';
+        errorBox.classList.add('show');
+      } else {
+        successBox.textContent = 'Ganaste ' + data.prizePoints + ' puntos!';
+        successBox.classList.add('show');
+        await loadUser();
+      }
+      await loadSpinStatus();
+    }, 3000);
+  } catch (err) {
+    spinBtn.disabled = false;
+    errorBox.textContent = 'No se pudo conectar con el servidor.';
+    errorBox.classList.add('show');
   }
 });
 

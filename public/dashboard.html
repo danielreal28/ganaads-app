@@ -85,6 +85,18 @@
     </div>
   </section>
 
+  <section id="section-games" style="display:none">
+    <div class="card" style="text-align:center;">
+      <h2>Ruleta diaria</h2>
+      <p>Gira una vez al día y gana puntos extra.</p>
+      <div id="wheel-visual" style="width:180px; height:180px; margin:20px auto; border-radius:50%; background:conic-gradient(#2ED9A8 0deg 60deg, #F5B942 60deg 120deg, #2ED9A8 120deg 180deg, #F5B942 180deg 240deg, #2ED9A8 240deg 300deg, #F5B942 300deg 360deg); border:4px solid var(--border); transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99); position:relative;"></div>
+      <button class="btn btn-gold" id="spin-btn">Girar ruleta</button>
+      <p id="spin-status-text" class="muted" style="margin-top:10px;"></p>
+      <div class="success-msg" id="spin-success"></div>
+      <div class="error-msg" id="spin-error"></div>
+    </div>
+  </section>
+
   <section id="section-support" style="display:none">
     <div class="card">
       <h2>Chat de soporte</h2>
@@ -103,6 +115,7 @@
   <div class="nav-tab active" data-section="watch">Ver anuncios</div>
   <div class="nav-tab" data-section="referrals">Referidos</div>
   <div class="nav-tab" data-section="withdraw">Retirar</div>
+  <div class="nav-tab" data-section="games">Juegos</div>
   <div class="nav-tab" data-section="support">Soporte<span id="support-badge" class="nav-badge" style="display:none"></span></div>
   <div class="nav-tab" id="admin-tab" style="display:none">Admin</div>
   <div class="nav-tab" id="logout-tab">Salir</div>

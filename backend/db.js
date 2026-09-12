@@ -79,6 +79,17 @@ async function initDb() {
 
   await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS last_active_at TIMESTAMP;`);
 
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS last_spin_at TIMESTAMP;`);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS memory_plays (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES users(id),
+      points_earned INTEGER NOT NULL,
+      played_at TIMESTAMP NOT NULL DEFAULT NOW()
+    );
+  `);
+
   console.log('Base de datos lista (tablas verificadas/creadas).');
 }
 
